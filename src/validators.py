@@ -14,7 +14,7 @@ def valid_date(input: str) -> bool:
     return True
 
 
-def valid_urls(input: str) -> bool:
+def valid_url(input: str) -> bool:
     return True
 
 

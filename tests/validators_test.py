@@ -19,7 +19,7 @@ def test_valid_date() -> None:
     pass
 
 
-def test_valid_urls() -> None:
+def test_valid_url() -> None:
     pass
 
 

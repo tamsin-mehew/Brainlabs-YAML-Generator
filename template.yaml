@@ -1,0 +1,79 @@
+# The non-null fields below are filled with their default values. Any fields
+# marked 'Optional' may be deleted and their default values will apply.
+# All fields are required unless stated otherwise.
+
+# If 'ignore' is set to true in the 'meta' field, the rest of the file
+# will be ignored and the repository will not be included in Sesame.
+
+# You can validate your brainlabs.yaml at sesame.brainlabsdigital.com/yaml-validation
+
+name: null # Any string, preferably in Title Case
+status: active # Optional (active, building, inactive)
+meta: # Optional
+  ignore: false # Optional (true, false)
+ownership:
+  owner: null # Use email, e.g. sam.d
+  maintainers:
+    - # Use email, e.g sam.d
+public-info:
+  reach: null # (general-client-tool, client-specific-tool, internal-tool, library, other)
+  tech-implementation: false # Optional (true, false)
+  client-ids: # Fill client-ids in if and only if reach == client-specific-tool.
+    - # To find clients' IDs, visit sesame.brainlabsdigital.com/yaml-validation
+  release-date: null # yyyy-mm-dd. Not required if status != active
+  tags: # Optional
+    - # See accepted tags at sesame.brainlabsdigital.com/yaml-validation
+  departments:
+    - # See accepted departments at sesame.brainlabsdigital.com/yaml-validation
+  platforms: # Required unless reach is library or deployment is web-app
+    - # See accepted platforms at sesame.brainlabsdigital.com/yaml-validation
+  documentation: # Optional
+    wiki: # Optional
+      - # Confluence url
+    cards: # Optional
+      - # Trello url
+    spreadsheets: # Optional
+      - # Google Sheets url
+    docs: # Optional
+      - # Google Docs url
+tech-info: # Optional
+  trackable: true # Optional (true, false)
+  documentation: # Optional
+    - # Any url; no need to link to READMEs, this is for additional documentation
+deployments: # Delete as appropriate. Fill in if, in public-info, reach != library
+  - type: server-cronjob
+  - type: tech-managed-google-ads-script
+    account-id: null
+    script-name: null
+    runs:
+      - run-name: null
+        schedule: null # Cron-style, e.g. 00 7 * * *
+  - type: user-managed-google-ads-script
+    eval-file-urls: # Optional
+    - # Any url
+  - type: server-button-press
+    server: project-y # See accepted servers at sesame.brainlabsdigital.com/yaml-validation
+    project-directory: null
+    domain: null # Optional
+  - type: web-app
+    server: project-y # See accepted servers at sesame.brainlabsdigital.com/yaml-validation
+    project-directory: null
+    domain: null # Optional
+  - type: tech-managed-apps-script
+    url: null
+    runs:
+      - run-name: null
+        # Delete as appropriate
+        schedule: null # Cron-style, e.g. 00 7 * * *
+        trigger: null # (add-on, apps-scripts-web-app, on-button-press, on-form-submit, on-open)
+  - type: user-managed-apps-script
+    template-url: null
+  - type: command-line
+    server: null # Optional. See accepted servers at sesame.brainlabsdigital.com/yaml-validation
+    project-directory: null # Optional, but fill in if you've filled in the server
+  - type: glitch
+    project-name: null
+    domain: null
+  - type: aws-lambda-function
+    function-arn: null
+  - type: pepper

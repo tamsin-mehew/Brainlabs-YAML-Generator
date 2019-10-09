@@ -22,13 +22,15 @@ def answers_to_structured_dict(answers: dict) -> dict:
     output["meta"]["ignore"] = answers["ignore"]
     output["ownership"]["owner"] = answers["owner"]
     output["ownership"]["maintainers"] = comma_sep_list(answers["maintainers"])
-    output["public-info"]["reach"] = answers["reach"]
+    output["public-info"]["reach"] = answers["reach"].strip("'")
     if answers["tech-implementation"] != "null":
-        output["public-info"]["tech-implementation"] = answers["tech-implementation"]
+        output["public-info"]["tech-implementation"] = answers[
+            "tech-implementation"
+        ].strip("'")
     if answers.get("client-ids"):
         output["public-info"]["client-ids"] = comma_sep_list(answers["client-ids"])
     if answers.get("release-date"):
-        output["public-info"]["release-date"] = answers["release-date"]
+        output["public-info"]["release-date"] = answers["release-date"].strip("'")
     if answers.get("tags"):
         output["public-info"]["tags"] = answers["tags"]
     output["public-info"]["departments"] = answers["departments"]
@@ -42,7 +44,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
     if answers.get("docs"):
         output["public-info"]["documentation"]["docs"] = answers["docs"]
     if answers.get("trackable"):
-        output["tech-info"]["trackable"] = answers["trackable"]
+        output["tech-info"]["trackable"] = answers["trackable"].strip("'")
     if answers.get("documentation"):
         output["tech-info"]["documentation"] = answers["documentation"]
     output["deployments"] = deployments_list(answers)

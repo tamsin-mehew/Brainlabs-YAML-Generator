@@ -52,7 +52,6 @@ def answers_to_structured_dict(answers: dict) -> dict:
 
 
 def structured_dict_to_yaml(structured_dict: dict) -> str:
-    print(structured_dict)
     return yaml.dump(structured_dict, sort_keys=False)
 
 

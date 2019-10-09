@@ -1,30 +1,48 @@
-def valid_email_prefix(input: str) -> bool:
-    return True
+import re
+
+from PyInquirer import Validator, ValidationError
 
 
-def valid_email_prefix_list(input: str) -> bool:
-    return True
+class ValidEmailPrefix(Validator):
+    def validate(self, document) -> None:
+        """Throws no errors for a valid email prefix."""
+        pass
 
 
-def valid_client_id(input: str) -> bool:
-    return True
+class ValidEmailPrefixList(Validator):
+    def validate(self, document) -> None:
+        pass
 
 
-def valid_date(input: str) -> bool:
-    return True
+class ValidClientIds(Validator):
+    def validate(self, document) -> None:
+        pass
 
 
-def valid_url(input: str) -> bool:
-    return True
+class ValidDate(Validator):
+    def validate(self, document) -> None:
+        """Throws no errors for a valid yyyy-mm-dd date."""
+        pass
 
 
-def valid_url_list(input: str) -> bool:
-    return True
+class ValidUrl(Validator):
+    def validate(self, document) -> None:
+        """Throws no errors for a syntaxtically valid url."""
+        pass
 
 
-def valid_cron(input: str) -> bool:
-    return True
+class ValidUrlList(Validator):
+    def validate(self, document) -> None:
+        pass
 
 
-def valid_directory(input: str) -> bool:
-    return True
+class ValidCron(Validator):
+    def validate(self, document) -> None:
+        """Throws no errors for a syntaxtically valid crontab style string."""
+        pass
+
+
+class ValidDirectory(Validator):
+    def validate(self, document) -> None:
+        """Throws no errors for a syntaxtically valid unix path."""
+        pass

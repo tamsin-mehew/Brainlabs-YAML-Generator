@@ -2,9 +2,10 @@ import src.validators as validators
 
 
 def test_valid_email_prefix() -> None:
-    assert validators.test_valid_email_prefix("james")
-    assert validators.test_valid_email_prefix("james.f")
-    assert not validators.test_valid_email_prefix("james@brainlabsdigital.com")
+    assert validators.valid_email_prefix("james")
+    assert validators.valid_email_prefix("james.f")
+    assert not validators.valid_email_prefix("james@brainlabsdigital.com")
+    assert not validators.valid_email_prefix("james f")
 
 
 def test_valid_email_prefix_list() -> None:

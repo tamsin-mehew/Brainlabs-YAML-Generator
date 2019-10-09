@@ -1,4 +1,4 @@
-import validators
+import src.validators as validators
 
 
 def test_valid_email_prefix() -> None:

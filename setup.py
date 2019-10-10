@@ -1,13 +1,13 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
-    name="Brainlabs YAML Generator",
-    packages=find_packages(),
-    version="4",
+    name="blyaml",
+    packages=["blyaml"],
+    version="1",
     description="Tool for generating brainlabs.yaml files.",
     author="James Freeman",
     author_email="james.f@brainlabsdigital.com",
     url="https://github.com/Brainlabs-Digital/Brainlabs-YAML-Generator",
-    scripts=["Brainlabs-YAML-Generator/bl-yaml"],
-    install_requires=["pyinquirer", "pyyaml"],
+    install_requires=["pyyaml", "pyinquirer"],
+    entry_points={"console_scripts": ["blyaml = blyaml.main:main"]},
 )

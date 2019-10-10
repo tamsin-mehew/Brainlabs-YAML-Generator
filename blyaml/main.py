@@ -3,11 +3,12 @@ import platform
 
 from PyInquirer import prompt
 
-from src.answers_to_yaml import answers_to_yaml
-from src.questions import meta_questions, standard_questions
+from blyaml.answers_to_yaml import answers_to_yaml
+from blyaml.questions import meta_questions, standard_questions
 
 
-def main() -> None:
+def main():
+    print("Welcome")
     meta_answers = prompt(meta_questions)
 
     if meta_answers["ignore"] == "false":

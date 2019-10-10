@@ -1,6 +1,6 @@
-from src.lists import departments, deployments, platforms, servers, tags
+from blyaml.lists import departments, deployments, platforms, servers, tags
 
-import src.validators as validators
+import blyaml.validators as validators
 
 
 def list_to_list_of_checkbox_dicts(input: list) -> list:

@@ -1,6 +1,7 @@
-from blyaml.lists import departments, deployments, platforms, servers, tags
+from functools import partial
 
 import blyaml.validators as validators
+from blyaml.lists import departments, deployments, platforms, servers, tags
 
 
 def list_to_list_of_checkbox_dicts(input: list) -> list:
@@ -40,7 +41,7 @@ def standard_questions(token: str) -> list:
         {
             "type": "input",
             "name": "maintainers",
-            "message": "Who are the maintainers? (Comma seperated email prefixes)",
+            "message": "Who are the maintainers? (Comma separated email prefixes)",
             "validate": validators.ValidEmailPrefixList,
         },
         {
@@ -64,7 +65,7 @@ def standard_questions(token: str) -> list:
         {
             "type": "input",
             "name": "client-ids",
-            "message": "What are the client ids? (Comma seperated) (To find clients' IDs, visit sesame.brainlabsdigital.com/yaml-validation)",
+            "message": "What are the client ids? (Comma separated) (To find clients' IDs, visit sesame.brainlabsdigital.com/yaml-validation)",
             "validate": validators.ValidClientIds,
             "when": lambda answers: answers["reach"] == "client-specific-tool",
         },
@@ -96,25 +97,25 @@ def standard_questions(token: str) -> list:
         {
             "type": "input",
             "name": "wiki",
-            "message": "What are the wiki urls? (Comma seperated, Optional)",
+            "message": "What are the wiki urls? (Comma separated, Optional)",
             "validate": validators.ValidUrlList,
         },
         {
             "type": "input",
             "name": "cards",
-            "message": "What are the trello card urls? (Comma seperated, Optional)",
+            "message": "What are the trello card urls? (Comma separated, Optional)",
             "validate": validators.ValidUrlList,
         },
         {
             "type": "input",
             "name": "spreadsheets",
-            "message": "What are the spreadsheet urls? (Comma seperated, Optional)",
+            "message": "What are the spreadsheet urls? (Comma separated, Optional)",
             "validate": validators.ValidUrlList,
         },
         {
             "type": "input",
             "name": "docs",
-            "message": "What are the docs urls? (Comma seperated, Optional)",
+            "message": "What are the docs urls? (Comma separated, Optional)",
             "validate": validators.ValidUrlList,
         },
         {
@@ -126,7 +127,7 @@ def standard_questions(token: str) -> list:
         {
             "type": "input",
             "name": "documentation",
-            "message": "Any documentation urls for Tech? (Comma seperated, Optional)",
+            "message": "Any documentation urls for Tech? (Comma separated, Optional)",
             "validate": validators.ValidUrlList,
         },
         {
@@ -134,43 +135,38 @@ def standard_questions(token: str) -> list:
             "name": "deployments",
             "message": "How is it deployed?",
             "choices": list_to_list_of_checkbox_dicts(deployments()),
-            "when": lambda answers: answers["reach"] != "library",
+            "when": is_library,
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-google-ads-script.account-id",
             "message": "What is the tech-managed-google-ads-script account id?",
-            "when": lambda answers: "tech-managed-google-ads-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-google-ads-script"),
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-google-ads-script.script-name",
             "message": "What is the tech-managed-google-ads-script script name?",
-            "when": lambda answers: "tech-managed-google-ads-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-google-ads-script"),
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-google-ads-script.run-name",
             "message": "What is the tech-managed-google-ads-script run name?",
-            "when": lambda answers: "tech-managed-google-ads-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-google-ads-script"),
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-google-ads-script.schedule",
             "message": "What is the tech-managed-google-ads-script schedule? (null or cron-style, e.g. 00 7 * * *)",
-            "when": lambda answers: "tech-managed-google-ads-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-google-ads-script"),
             "validate": validators.ValidCron,
         },
         {
             "type": "input",
             "name": "deployments.user-managed-google-ads-script.eval-file-urls",
-            "message": "What is the user-managed-google-ads-script url? (Comma seperated, Optional)",
-            "when": lambda answers: "user-managed-google-ads-script"
-            in answers["deployments"],
+            "message": "What is the user-managed-google-ads-script url? (Comma separated, Optional)",
+            "when": partial(is_deployment, "user-managed-google-ads-script"),
             "validate": validators.ValidUrlList,
         },
         {
@@ -178,20 +174,20 @@ def standard_questions(token: str) -> list:
             "name": "deployments.server-button-press.server",
             "message": "What is the server-button-press server?",
             "choices": servers(token),
-            "when": lambda answers: "server-button-press" in answers["deployments"],
+            "when": partial(is_deployment, "server-button-press"),
         },
         {
             "type": "input",
             "name": "deployments.server-button-press.project-directory",
             "message": "What is the server-button-press project directory?",
-            "when": lambda answers: "server-button-press" in answers["deployments"],
+            "when": partial(is_deployment, "server-button-press"),
             "validate": validators.ValidDirectory,
         },
         {
             "type": "input",
             "name": "deployments.server-button-press.domain",
             "message": "What is the server-button-press domain? (Optional)",
-            "when": lambda answers: "server-button-press" in answers["deployments"],
+            "when": partial(is_deployment, "server-button-press"),
             "validate": validators.ValidUrl,
         },
         {
@@ -199,43 +195,40 @@ def standard_questions(token: str) -> list:
             "name": "deployments.web-app.server",
             "message": "What is the web-app server?",
             "choices": servers(token),
-            "when": lambda answers: "web-app" in answers["deployments"],
+            "when": partial(is_deployment, "web-app"),
         },
         {
             "type": "input",
             "name": "deployments.web-app.project-directory",
             "message": "What is the web-app project directory?",
-            "when": lambda answers: "web-app" in answers["deployments"],
+            "when": partial(is_deployment, "web-app"),
             "validate": validators.ValidDirectory,
         },
         {
             "type": "input",
             "name": "deployments.web-app.domain",
             "message": "What is the web-app domain? (Optional)",
-            "when": lambda answers: "web-app" in answers["deployments"],
+            "when": partial(is_deployment, "web-app"),
             "validate": validators.ValidUrl,
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-apps-script.url",
             "message": "What is the tech-managed-apps-script url?",
-            "when": lambda answers: "tech-managed-apps-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-apps-script"),
             "validate": validators.ValidUrl,
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-apps-script.run-name",
             "message": "What is the tech-managed-apps-script run name?",
-            "when": lambda answers: "tech-managed-apps-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-apps-script"),
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-apps-script.schedule",
             "message": "What is the tech-managed-apps-script schedule? (null or Cron-style, e.g. 00 7 * * *)",
-            "when": lambda answers: "tech-managed-apps-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-apps-script"),
             "validate": validators.ValidCron,
         },
         {
@@ -250,41 +243,47 @@ def standard_questions(token: str) -> list:
                 "on-form-submit",
                 "on-open",
             ],
-            "when": lambda answers: "tech-managed-apps-script"
-            in answers["deployments"],
+            "when": partial(is_deployment, "tech-managed-apps-script"),
         },
         {
             "type": "list",
             "name": "deployments.command-line.server",
             "message": "What is the command-line server? (Optional)",
             "choices": ["null"] + servers(token),
-            "when": lambda answers: "command-line" in answers["deployments"],
+            "when": partial(is_deployment, "command-line"),
         },
         {
             "type": "input",
             "name": "deployments.command-line.project-directory",
             "message": "What is the command-line project directory?",
-            "when": lambda answers: "command-line" in answers["deployments"],
+            "when": partial(is_deployment, "command-line"),
             "validate": validators.ValidDirectory,
         },
         {
             "type": "input",
             "name": "deployments.glitch.project-name",
             "message": "What is the glitch project name?",
-            "when": lambda answers: "glitch" in answers["deployments"],
+            "when": partial(is_deployment, "glitch"),
         },
         {
             "type": "input",
             "name": "deployments.glitch.domain",
             "message": "What is the glitch domain?",
-            "when": lambda answers: "glitch" in answers["deployments"],
+            "when": partial(is_deployment, "glitch"),
             "validate": validators.ValidUrl,
         },
         {
             "type": "input",
             "name": "deployments.aws-lambda-function.function-arn",
             "message": "What is the aws-lambda-function function arn?",
-            "when": lambda answers: "aws-lambda-function" in answers["deployments"],
+            "when": partial(is_deployment, "aws-lambda-function"),
         },
     ]
 
+
+def is_library(answers: dict) -> bool:
+    return answers["reach"] != "library"
+
+
+def is_deployment(deployment: str, answers: dict) -> bool:
+    return is_library(answers) and (deployment in answers["deployments"])

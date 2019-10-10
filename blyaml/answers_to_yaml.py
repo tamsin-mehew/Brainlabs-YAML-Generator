@@ -47,7 +47,8 @@ def answers_to_structured_dict(answers: dict) -> dict:
         output["tech-info"]["trackable"] = yaml_str(answers["trackable"])
     if answers.get("documentation"):
         output["tech-info"]["documentation"] = answers["documentation"]
-    output["deployments"] = deployments_list(answers)
+    if answers.get("deployments"):
+        output["deployments"] = deployments_list(answers)
     return dict(output)
 
 

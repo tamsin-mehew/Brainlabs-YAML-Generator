@@ -3,16 +3,14 @@ from typing import List
 
 import yaml
 
-from blyaml.lists import get_client_map
 
-
-def answers_to_yaml(answers: dict, token: str) -> str:
-    structured_dict = answers_to_structured_dict(answers, token)
+def answers_to_yaml(answers: dict) -> str:
+    structured_dict = answers_to_structured_dict(answers)
     yaml = structured_dict_to_yaml(structured_dict)
     return yaml
 
 
-def answers_to_structured_dict(answers: dict, token: str) -> dict:
+def answers_to_structured_dict(answers: dict) -> dict:
     output = defaultdict(dict)
 
     if answers["ignore"] == "true":
@@ -31,8 +29,7 @@ def answers_to_structured_dict(answers: dict, token: str) -> dict:
         )
 
     if answers.get("client-names", "None found.") != "None found.":
-        client_map = get_client_map(token)
-        client_names = [client_map[name] for name in answers["client-names"]]
+        client_names = [name_id.split("➖")[1] for name_id in answers["client-names"]]
         output["public-info"]["client-ids"] = client_names
     if answers.get("client-ids"):
         output["public-info"]["client-ids"] = comma_sep_list(answers["client-ids"])

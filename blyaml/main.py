@@ -21,7 +21,7 @@ def main() -> None:
         standard_answers = {}
 
     answers = {**meta_answers, **standard_answers}
-    yaml = answers_to_yaml(answers, token)
+    yaml = answers_to_yaml(answers)
 
     output_filename = "output.yaml"
     with open(output_filename, "w") as file:

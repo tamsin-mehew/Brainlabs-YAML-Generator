@@ -7,7 +7,7 @@ import requests
 from PyInquirer import prompt
 
 from blyaml.answers_to_yaml import answers_to_yaml
-from blyaml.questions import meta_questions, standard_questions
+from blyaml.questions import meta_questions, standard_questions, output_questions
 
 DIRECTROY = ".blyaml"
 
@@ -26,7 +26,8 @@ def main() -> None:
     answers = {**meta_answers, **standard_answers}
     yaml = answers_to_yaml(answers)
 
-    output_filename = "output.yaml"
+    output_answers = prompt(output_questions())
+    output_filename = output_answers["filename"]
     with open(output_filename, "w") as file:
         file.write(yaml)
     print(f"\nYour yaml file has been written to: {output_filename}")

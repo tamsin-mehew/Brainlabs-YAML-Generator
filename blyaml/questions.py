@@ -312,3 +312,14 @@ def is_library(answers: dict) -> bool:
 
 def is_deployment(deployment: str, answers: dict) -> bool:
     return is_library(answers) and (deployment in answers["deployments"])
+
+
+def output_questions() -> list:
+    return [
+        {
+            "type": "list",
+            "name": "filename",
+            "message": "Name of yaml file output?",
+            "choices": ["output.yaml", "brainlabs.yaml"],
+        }
+    ]

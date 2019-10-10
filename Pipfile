@@ -10,3 +10,4 @@ twine = "*"
 [packages]
 pyinquirer = "*"
 pyyaml = "*"
+requests = "*"

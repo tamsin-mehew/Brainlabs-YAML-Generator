@@ -12,10 +12,10 @@ def main() -> None:
     token = get_token()
     print(welcome_message())
 
-    meta_answers = prompt(meta_questions)
+    meta_answers = prompt(meta_questions())
 
     if meta_answers["ignore"] == "false":
-        standard_answers = prompt(standard_questions)
+        standard_answers = prompt(standard_questions(token))
     else:
         standard_answers = {}
 

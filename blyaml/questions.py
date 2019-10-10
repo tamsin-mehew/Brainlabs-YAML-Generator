@@ -1,7 +1,7 @@
 from functools import partial
 
 import blyaml.validators as validators
-from blyaml.lists import departments, deployments, platforms, servers, tags, clients
+from blyaml.lists import values
 
 
 def list_to_list_of_checkbox_dicts(input: list) -> list:
@@ -74,7 +74,7 @@ def standard_questions(token: str) -> list:
             "type": "checkbox",
             "name": "client-names",
             "message": "What are the client ids?",
-            "choices": list_to_list_of_checkbox_dicts(clients(token)),
+            "choices": list_to_list_of_checkbox_dicts(values("client", token)),
             "validate": validators.ValidClientIds,
             "when": lambda answers: answers["reach"] == "client-specific-tool"
             and answers["client-ids_choice"] == "From a list",
@@ -99,19 +99,19 @@ def standard_questions(token: str) -> list:
             "type": "checkbox",
             "name": "tags",
             "message": "What are the tags? (Optional)",
-            "choices": list_to_list_of_checkbox_dicts(tags(token)),
+            "choices": list_to_list_of_checkbox_dicts(values("tag", token)),
         },
         {
             "type": "checkbox",
             "name": "departments",
             "message": "What are the departments?",
-            "choices": list_to_list_of_checkbox_dicts(departments(token)),
+            "choices": list_to_list_of_checkbox_dicts(values("department", token)),
         },
         {
             "type": "checkbox",
             "name": "platforms",
             "message": "What are the platforms?",
-            "choices": list_to_list_of_checkbox_dicts(platforms(token)),
+            "choices": list_to_list_of_checkbox_dicts(values("platform", token)),
         },
         {
             "type": "input",
@@ -153,7 +153,7 @@ def standard_questions(token: str) -> list:
             "type": "checkbox",
             "name": "deployments",
             "message": "How is it deployed?",
-            "choices": list_to_list_of_checkbox_dicts(deployments()),
+            "choices": list_to_list_of_checkbox_dicts(values("deployment", token)),
             "when": is_library,
         },
         {
@@ -195,7 +195,7 @@ def standard_questions(token: str) -> list:
             "type": "list",
             "name": "deployments.server-button-press.server",
             "message": "What is the server-button-press server?",
-            "choices": servers(token),
+            "choices": values("server", token),
             "when": partial(is_deployment, "server-button-press"),
         },
         {
@@ -216,7 +216,7 @@ def standard_questions(token: str) -> list:
             "type": "list",
             "name": "deployments.web-app.server",
             "message": "What is the web-app server?",
-            "choices": servers(token),
+            "choices": values("server", token),
             "when": partial(is_deployment, "web-app"),
         },
         {
@@ -272,7 +272,7 @@ def standard_questions(token: str) -> list:
             "type": "list",
             "name": "deployments.command-line.server",
             "message": "What is the command-line server? (Optional)",
-            "choices": ["null"] + servers(token),
+            "choices": ["null"] + values("server", token),
             "when": partial(is_deployment, "command-line"),
         },
         {

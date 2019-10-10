@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 import subprocess
 import platform
 
@@ -8,7 +9,9 @@ from blyaml.questions import meta_questions, standard_questions
 
 
 def main() -> None:
+    token = get_token()
     print(welcome_message())
+
     meta_answers = prompt(meta_questions)
 
     if meta_answers["ignore"] == "false":
@@ -35,6 +38,27 @@ def main() -> None:
         print(f"Your yaml file has been copied to clipboard.")
 
     print("Check validation at: https://sesame.brainlabsdigital.com/yaml-validation")
+
+
+def get_token() -> str:
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--reset",
+        dest="reset",
+        default=False,
+        action="store_true",
+        help="Reset the token",
+    )
+    args = parser.parse_args()
+
+    with open("test_file.txt", "r") as file:
+        token = file.read()
+    if not token or args.reset:
+        with open("test_file.txt", "w") as file:
+            token = input("Sesame token: ")
+            print("\n")
+            file.write(token)
+    return token
 
 
 def welcome_message() -> str:

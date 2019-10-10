@@ -9,6 +9,8 @@ from PyInquirer import prompt
 from blyaml.answers_to_yaml import answers_to_yaml
 from blyaml.questions import meta_questions, standard_questions
 
+DIRECTROY = ".blyaml"
+
 
 def main() -> None:
     token = get_token()
@@ -54,7 +56,7 @@ def get_token() -> str:
     )
     args = parser.parse_args()
 
-    token_file = Path.home() / ".blyaml_token.txt"
+    token_file = Path.home() / DIRECTROY / "token.txt"
     with open(token_file, "a+") as file:
         file.seek(0)
         token = file.read()

@@ -1,4 +1,13 @@
 from setuptools import setup
+from setuptools.command.install import install
+from pathlib import Path
+
+
+class MakeFolder(install):
+    def run(self) -> None:
+        (Path.home() / ".blyaml").mkdir()
+        install.run(self)
+
 
 setup(
     name="blyaml",
@@ -10,4 +19,5 @@ setup(
     url="https://github.com/Brainlabs-Digital/Brainlabs-YAML-Generator",
     install_requires=["pyyaml>=5.1.1", "pyinquirer", "requests"],
     entry_points={"console_scripts": ["blyaml = blyaml.main:main"]},
+    cmdclass={"install": MakeFolder},
 )

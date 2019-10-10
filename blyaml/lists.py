@@ -1,23 +1,27 @@
 import requests
 import shelve
+from pathlib import Path
 
+
+DIRECTROY = ".blyaml"
 name_id_seperator = "➖   "
 
 
 def values(name: str, token: str) -> list:
-    if name == "client":
-        return client(token)
-    elif name == "deployment":
-        return deployment()
-    else:
-        try:
+    shelf_pathname = str(Path.home() / DIRECTROY / "lists")
+    try:
+        if name == "client":
+            values_list = client(token)
+        elif name == "deployment":
+            values_list = deployment()
+        else:
             values_list = sesame_list(token, name)
-        except requests.RequestException:
-            with shelve.open("lists") as lists:
-                values_list = lists.get(name, [])
-        with shelve.open(name) as lists:
-            lists[name] = values_list
-        return values_list
+    except requests.RequestException:
+        with shelve.open(shelf_pathname) as lists:
+            values_list = lists[name]
+    with shelve.open(shelf_pathname) as lists:
+        lists[name] = values_list
+    return values_list
 
 
 def sesame_list(token: str, endpoint: str) -> list:
@@ -58,7 +62,7 @@ def client(token: str) -> list:
         clients = [client_name_format(client) for client in response.json()]
         return sorted(clients)
     except Exception:
-        return ["None found."]
+        raise requests.RequestException
 
 
 def client_name_format(client: dict) -> str:

@@ -31,13 +31,13 @@ def answers_to_structured_dict(answers: dict) -> dict:
         )
 
     if answers.get("client-names", "None found.") != "None found.":
-        client_names = [
+        client_ids = [
             name_id.split(name_id_seperator)[1].strip()
             for name_id in answers["client-names"]
         ]
-        output["public-info"]["client-ids"] = client_names
+        output["public-info"]["client-ids"] = int(client_ids)
     if answers.get("client-ids"):
-        output["public-info"]["client-ids"] = comma_sep_list(answers["client-ids"])
+        output["public-info"]["client-ids"] = int(comma_sep_list(answers["client-ids"]))
     if answers.get("release-date"):
         output["public-info"]["release-date"] = answers["release-date"]
     if answers.get("tags"):

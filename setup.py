@@ -5,7 +5,7 @@ from pathlib import Path
 
 class MakeFolder(install):
     def run(self) -> None:
-        (Path.home() / ".blyaml").mkdir()
+        (Path.home() / ".blyaml").mkdir(exist_ok=True)
         install.run(self)
 
 

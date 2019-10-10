@@ -14,14 +14,14 @@ def main() -> None:
     print(welcome_message())
 
     meta_answers = prompt(meta_questions())
-
+    print("Checking Sesame API for valid values ...")
     if meta_answers["ignore"] == "false":
         standard_answers = prompt(standard_questions(token))
     else:
         standard_answers = {}
 
     answers = {**meta_answers, **standard_answers}
-    yaml = answers_to_yaml(answers)
+    yaml = answers_to_yaml(answers, token)
 
     output_filename = "output.yaml"
     with open(output_filename, "w") as file:

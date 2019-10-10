@@ -1,7 +1,7 @@
 from functools import partial
 
 import blyaml.validators as validators
-from blyaml.lists import departments, deployments, platforms, servers, tags
+from blyaml.lists import departments, deployments, platforms, servers, tags, clients
 
 
 def list_to_list_of_checkbox_dicts(input: list) -> list:
@@ -25,6 +25,7 @@ def standard_questions(token: str) -> list:
             "type": "input",
             "name": "name",
             "message": "What is the name? (in Title Case)",
+            "validate": validators.ValidNonEmpty,
         },
         {
             "type": "list",
@@ -63,11 +64,29 @@ def standard_questions(token: str) -> list:
             "choices": ["null", "false", "true"],
         },
         {
+            "type": "list",
+            "name": "client-ids_choice",
+            "message": "How do you want to select client ids?",
+            "choices": ["From a list", "Type them in"],
+            "when": lambda answers: answers["reach"] == "client-specific-tool",
+        },
+        {
+            "type": "checkbox",
+            "name": "client-names",
+            "message": "What are the client ids?",
+            "choices": list_to_list_of_checkbox_dicts(clients(token)),
+            "validate": validators.ValidClientIds,
+            "when": lambda answers: answers["reach"] == "client-specific-tool"
+            and answers["client-ids_choice"] == "From a list",
+        },
+        {
             "type": "input",
             "name": "client-ids",
             "message": "What are the client ids? (Comma separated) (To find clients' IDs, visit sesame.brainlabsdigital.com/yaml-validation)",
             "validate": validators.ValidClientIds,
-            "when": lambda answers: answers["reach"] == "client-specific-tool",
+            "when": lambda answers: answers["reach"] == "client-specific-tool"
+            and answers["client-ids_choice"] == "Type them in"
+            and answers.get("client-names", "None found.") != "None found.",
         },
         {
             "type": "input",
@@ -98,25 +117,25 @@ def standard_questions(token: str) -> list:
             "type": "input",
             "name": "wiki",
             "message": "What are the wiki urls? (Comma separated, Optional)",
-            "validate": validators.ValidUrlList,
+            "validate": validators.ValidOptionalUrlList,
         },
         {
             "type": "input",
             "name": "cards",
             "message": "What are the trello card urls? (Comma separated, Optional)",
-            "validate": validators.ValidUrlList,
+            "validate": validators.ValidOptionalUrlList,
         },
         {
             "type": "input",
             "name": "spreadsheets",
             "message": "What are the spreadsheet urls? (Comma separated, Optional)",
-            "validate": validators.ValidUrlList,
+            "validate": validators.ValidOptionalUrlList,
         },
         {
             "type": "input",
             "name": "docs",
             "message": "What are the docs urls? (Comma separated, Optional)",
-            "validate": validators.ValidUrlList,
+            "validate": validators.ValidOptionalUrlList,
         },
         {
             "type": "list",
@@ -128,7 +147,7 @@ def standard_questions(token: str) -> list:
             "type": "input",
             "name": "documentation",
             "message": "Any documentation urls for Tech? (Comma separated, Optional)",
-            "validate": validators.ValidUrlList,
+            "validate": validators.ValidOptionalUrlList,
         },
         {
             "type": "checkbox",
@@ -142,18 +161,21 @@ def standard_questions(token: str) -> list:
             "name": "deployments.tech-managed-google-ads-script.account-id",
             "message": "What is the tech-managed-google-ads-script account id?",
             "when": partial(is_deployment, "tech-managed-google-ads-script"),
+            "validate": validators.ValidNonEmpty,
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-google-ads-script.script-name",
             "message": "What is the tech-managed-google-ads-script script name?",
             "when": partial(is_deployment, "tech-managed-google-ads-script"),
+            "validate": validators.ValidNonEmpty,
         },
         {
             "type": "input",
             "name": "deployments.tech-managed-google-ads-script.run-name",
             "message": "What is the tech-managed-google-ads-script run name?",
             "when": partial(is_deployment, "tech-managed-google-ads-script"),
+            "validate": validators.ValidNonEmpty,
         },
         {
             "type": "input",
@@ -167,7 +189,7 @@ def standard_questions(token: str) -> list:
             "name": "deployments.user-managed-google-ads-script.eval-file-urls",
             "message": "What is the user-managed-google-ads-script url? (Comma separated, Optional)",
             "when": partial(is_deployment, "user-managed-google-ads-script"),
-            "validate": validators.ValidUrlList,
+            "validate": validators.ValidOptionalUrlList,
         },
         {
             "type": "list",
@@ -223,6 +245,7 @@ def standard_questions(token: str) -> list:
             "name": "deployments.tech-managed-apps-script.run-name",
             "message": "What is the tech-managed-apps-script run name?",
             "when": partial(is_deployment, "tech-managed-apps-script"),
+            "validate": validators.ValidNonEmpty,
         },
         {
             "type": "input",
@@ -264,6 +287,7 @@ def standard_questions(token: str) -> list:
             "name": "deployments.glitch.project-name",
             "message": "What is the glitch project name?",
             "when": partial(is_deployment, "glitch"),
+            "validate": validators.ValidNonEmpty,
         },
         {
             "type": "input",
@@ -277,6 +301,7 @@ def standard_questions(token: str) -> list:
             "name": "deployments.aws-lambda-function.function-arn",
             "message": "What is the aws-lambda-function function arn?",
             "when": partial(is_deployment, "aws-lambda-function"),
+            "validate": validators.ValidNonEmpty,
         },
     ]
 

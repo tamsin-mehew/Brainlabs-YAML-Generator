@@ -13,6 +13,14 @@ def sesame_lists(token: str, endpoint: str) -> list:
         raise requests.RequestException
 
 
+def get_client_map(token: str) -> dict:
+    sesame_api_url = f"https://sesame.brainlabsdigital.com/api/client"
+    headers = {"Authorization": f"token {token}"}
+    response = requests.get(sesame_api_url, headers=headers)
+    return {client["name"]: client["id"] for client in response.json()}
+    # This will be an issues if two clients have the same name.
+
+
 def tags(token: str) -> list:
     try:
         return sesame_lists(token, "tag")
@@ -151,3 +159,10 @@ def servers(token: str) -> list:
             "workhorse3",
             "workhorse4",
         ]
+
+
+def clients(token: str) -> list:
+    try:
+        return sesame_lists(token, "client")
+    except requests.RequestException:
+        return ["None found."]

@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 import subprocess
 import platform
+from pathlib import Path
 
 import requests
 from PyInquirer import prompt
@@ -53,7 +54,7 @@ def get_token() -> str:
     )
     args = parser.parse_args()
 
-    token_file = "token.txt"
+    token_file = Path.home() / ".blyaml_token.txt"
     with open(token_file, "a+") as file:
         file.seek(0)
         token = file.read()

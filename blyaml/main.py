@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import subprocess
 import platform
 
+import requests
 from PyInquirer import prompt
 
 from blyaml.answers_to_yaml import answers_to_yaml
@@ -19,24 +20,22 @@ def main() -> None:
     else:
         standard_answers = {}
 
-    answers = {}
-    answers.update(meta_answers)
-    answers.update(standard_answers)
-
+    answers = {**meta_answers, **standard_answers}
     yaml = answers_to_yaml(answers)
+
     output_filename = "output.yaml"
     with open(output_filename, "w") as file:
         file.write(yaml)
+    print(f"\nYour yaml file has been written to: {output_filename}")
 
-    print(f"Your yaml file has been written to: {output_filename}")
-
-    if platform.system() == "Darwin":
-        p = subprocess.Popen(
-            "pbcopy", env={"LANG": "en_US.UTF-8"}, stdin=subprocess.PIPE
-        )
-        p.communicate(yaml.encode())
+    if platform.system() == "Darwin":  # Darwin is macOS
+        copy_to_clipboard(yaml)
         print(f"Your yaml file has been copied to clipboard.")
 
+    if validate(yaml, token):
+        print("\nYour yaml appears to be valid.")
+    else:
+        print("\nYour yaml appears to be invalid.")
     print("Check validation at: https://sesame.brainlabsdigital.com/yaml-validation")
 
 
@@ -72,6 +71,20 @@ def welcome_message() -> str:
         + "Spacebar is used in multi select questions"
         + "\n"
     )
+
+
+def copy_to_clipboard(text: str) -> None:
+    p = subprocess.Popen("pbcopy", env={"LANG": "en_US.UTF-8"}, stdin=subprocess.PIPE)
+    p.communicate(text.encode())
+
+
+def validate(yaml: str, token: str) -> bool:
+    sesame_validate_url = "https://sesame.brainlabsdigital.com/api/validate/"
+    headers = {"Authorization": f"token {token}"}
+    response = requests.post(
+        sesame_validate_url, data={"yaml-string": yaml}, headers=headers
+    )
+    return response.json()["errors"] == []
 
 
 if __name__ == "__main__":

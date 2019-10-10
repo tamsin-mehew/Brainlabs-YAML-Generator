@@ -7,8 +7,8 @@ from blyaml.answers_to_yaml import answers_to_yaml
 from blyaml.questions import meta_questions, standard_questions
 
 
-def main():
-    print("Welcome")
+def main() -> None:
+    print(welcome_message())
     meta_answers = prompt(meta_questions)
 
     if meta_answers["ignore"] == "false":
@@ -35,6 +35,19 @@ def main():
         print(f"Your yaml file has been copied to clipboard.")
 
     print("Check validation at: https://sesame.brainlabsdigital.com/yaml-validation")
+
+
+def welcome_message() -> str:
+    bold = "\033[1m"
+    end = "\033[0m"
+    return (
+        f"{bold}Welcome to the Brainlabs YAML Generator.{end}\n"
+        + "\n"
+        + "You will be asked a series of questions to generate your yaml.\n"
+        + "Arrow keys select, enter confirms. "
+        + "Spacebar is used in multi select questions"
+        + "\n"
+    )
 
 
 if __name__ == "__main__":

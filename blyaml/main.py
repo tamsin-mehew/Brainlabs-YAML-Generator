@@ -53,10 +53,12 @@ def get_token() -> str:
     )
     args = parser.parse_args()
 
-    with open("test_file.txt", "r") as file:
+    token_file = "token.txt"
+    with open(token_file, "a+") as file:
+        file.seek(0)
         token = file.read()
     if not token or args.reset:
-        with open("test_file.txt", "w") as file:
+        with open(token_file, "w") as file:
             token = input("Sesame token: ")
             print("\n")
             file.write(token)

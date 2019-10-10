@@ -131,9 +131,9 @@ def standard_questions(token: str) -> list:
         },
         {
             "type": "checkbox",
-            "name": "deployments(token)",
+            "name": "deployments",
             "message": "How is it deployed?",
-            "choices": list_to_list_of_checkbox_dicts(deployments(token)),
+            "choices": list_to_list_of_checkbox_dicts(deployments()),
             "when": lambda answers: answers["reach"] != "library",
         },
         {

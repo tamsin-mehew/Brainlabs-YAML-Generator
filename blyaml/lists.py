@@ -94,23 +94,20 @@ def platforms(token: str) -> list:
         ]
 
 
-def deployments(token: str) -> list:
-    try:
-        return sesame_lists(token, "deployment")
-    except requests.RequestException:
-        return [
-            "server-cronjob",
-            "tech-managed-google-ads-script",
-            "user-managed-google-ads-script",
-            "server-button-press",
-            "web-app",
-            "tech-managed-apps-script",
-            "user-managed-apps-script",
-            "command-line",
-            "glitch",
-            "aws-lambda-function",
-            "pepper",
-        ]
+def deployments() -> list:
+    return [
+        "server-cronjob",
+        "tech-managed-google-ads-script",
+        "user-managed-google-ads-script",
+        "server-button-press",
+        "web-app",
+        "tech-managed-apps-script",
+        "user-managed-apps-script",
+        "command-line",
+        "glitch",
+        "aws-lambda-function",
+        "pepper",
+    ]
 
 
 def departments(token: str) -> list:

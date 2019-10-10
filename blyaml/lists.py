@@ -1,5 +1,7 @@
 import requests
 
+name_id_seperator = "➖   "
+
 
 def sesame_lists(token: str, endpoint: str) -> list:
     sesame_api_url = f"https://sesame.brainlabsdigital.com/api/{endpoint}"
@@ -160,7 +162,11 @@ def clients(token: str) -> list:
         response = requests.get(sesame_api_url, headers=headers)
         assert response.status_code == 200
 
-        clients = [client["name"] + "➖" + client["id"] for client in response.json()]
-        return clients
+        clients = [client_name_format(client) for client in response.json()]
+        return sorted(clients)
     except Exception:
         return ["None found."]
+
+
+def client_name_format(client: dict) -> str:
+    return client["name"].ljust(50) + name_id_seperator + client["id"]

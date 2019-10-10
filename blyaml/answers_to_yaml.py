@@ -23,7 +23,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
     output["status"] = answers["status"]
     output["meta"]["ignore"] = yaml_str(answers["ignore"])
     output["ownership"]["owner"] = answers["owner"]
-    output["ownership"]["maintainers"] = comma_sep_list(answers["maintainers"])
+    output["ownership"]["maintainers"] = comma_sep(answers["maintainers"])
     output["public-info"]["reach"] = answers["reach"]
     if answers["tech-implementation"] != "null":
         output["public-info"]["tech-implementation"] = yaml_str(
@@ -32,12 +32,13 @@ def answers_to_structured_dict(answers: dict) -> dict:
 
     if answers.get("client-names", "None found.") != "None found.":
         client_ids = [
-            name_id.split(name_id_seperator)[1].strip()
+            int(name_id.split(name_id_seperator)[1].strip())
             for name_id in answers["client-names"]
         ]
-        output["public-info"]["client-ids"] = int(client_ids)
+        output["public-info"]["client-ids"] = client_ids
     if answers.get("client-ids"):
-        output["public-info"]["client-ids"] = int(comma_sep_list(answers["client-ids"]))
+        client_ids = list(map(int, comma_sep(answers["client-ids"])))
+        output["public-info"]["client-ids"] = client_ids
     if answers.get("release-date"):
         output["public-info"]["release-date"] = answers["release-date"]
     if answers.get("tags"):
@@ -65,7 +66,7 @@ def structured_dict_to_yaml(structured_dict: dict) -> str:
     return yaml.dump(structured_dict, sort_keys=False)
 
 
-def comma_sep_list(input: str) -> list:
+def comma_sep(input: str) -> list:
     return [i.strip() for i in input.split(",")]
 
 

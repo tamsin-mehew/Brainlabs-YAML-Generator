@@ -32,10 +32,13 @@ def main() -> None:
         copy_to_clipboard(yaml)
         print(f"Your yaml file has been copied to clipboard.")
 
-    if validate(yaml, token):
-        print("\nYour yaml appears to be valid.")
-    else:
-        print("\nYour yaml appears to be invalid.")
+    try:
+        if validate(yaml, token):
+            print("\nYour yaml appears to be valid.")
+        else:
+            print("\nYour yaml appears to be invalid.")
+    except requests.RequestException:
+        print("\nYour yaml was not able to validated by the Sesame API.")
     print("Check validation at: https://sesame.brainlabsdigital.com/yaml-validation")
 
 
@@ -84,7 +87,10 @@ def validate(yaml: str, token: str) -> bool:
     response = requests.post(
         sesame_validate_url, data={"yaml-string": yaml}, headers=headers
     )
-    return response.json()["errors"] == []
+    if response.status_code == 200:
+        return response.json()["errors"] == []
+    else:
+        raise requests.RequestException
 
 
 if __name__ == "__main__":

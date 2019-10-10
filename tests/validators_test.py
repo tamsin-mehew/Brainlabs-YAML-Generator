@@ -1,11 +1,17 @@
+from pytest import raises
+from PyInquirer import ValidationError
+
 import blyaml.validators as validators
 
 
 def test_valid_email_prefix() -> None:
-    assert validators.valid_email_prefix("james")
-    assert validators.valid_email_prefix("james.f")
-    assert not validators.valid_email_prefix("james@brainlabsdigital.com")
-    assert not validators.valid_email_prefix("james f")
+    email_validator = validators.ValidEmailPrefix()
+    email_validator.validate("james")
+    email_validator.validate("james.f")
+    with raises(ValidationError):
+        email_validator.validate("james@brainlabsdigital.com")
+    with raises(ValidationError):
+        email_validator.validate("james f")
 
 
 def test_valid_email_prefix_list() -> None:

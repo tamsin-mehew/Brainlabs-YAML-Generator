@@ -37,10 +37,8 @@ def main() -> None:
         print(f"Your yaml file has been copied to clipboard.")
 
     try:
-        if validate(yaml, token):
-            print("\nYour yaml appears to be valid.")
-        else:
-            print("\nYour yaml appears to be invalid.")
+        state = "valid" if validate(yaml, token) else "invalid"
+        print(f"\nThe Sesame API says that your yaml appears to be {state}.")
     except requests.RequestException:
         print("\nYour yaml was not able to validated by the Sesame API.")
     print("Check validation at: https://sesame.brainlabsdigital.com/yaml-validation")

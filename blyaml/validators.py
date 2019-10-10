@@ -80,7 +80,8 @@ class ValidEmailPrefixList(Validator):
 class ValidClientIds(Validator):
     def validate(self, document) -> None:
         """Throws no errors for a syntaxtically valid client id list."""
-        non_empty(document)
+        # Checkboxes don't support validation yet: https://github.com/CITGuru/PyInquirer/issues/46
+        pass
 
 
 class ValidDate(Validator):

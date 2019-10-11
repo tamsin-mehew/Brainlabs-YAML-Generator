@@ -12,7 +12,7 @@ class MakeFolder(install):
 setup(
     name="blyaml",
     packages=["blyaml"],
-    version="14",
+    version="15",
     description="Tool for generating brainlabs.yaml files.",
     author="James Freeman",
     author_email="james.f@brainlabsdigital.com",

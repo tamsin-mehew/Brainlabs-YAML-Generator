@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import date
 from typing import List
 
 import yaml
@@ -42,7 +43,8 @@ def answers_to_structured_dict(answers: dict) -> dict:
         client_ids = list(map(int, comma_sep(answers["client-ids"])))
         output["public-info"]["client-ids"] = client_ids
     if answers.get("release-date"):
-        output["public-info"]["release-date"] = answers["release-date"]
+        release_date = date.fromisoformat(answers["release-date"])
+        output["public-info"]["release-date"] = release_date
     if answers.get("tags"):
         output["public-info"]["tags"] = answers["tags"]
     output["public-info"]["departments"] = answers["departments"]

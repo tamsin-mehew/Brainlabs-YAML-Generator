@@ -1,0 +1,23 @@
+name: Brainlabs YAML Generator
+status: active
+meta:
+  ignore: false
+ownership:
+  owner: james.f
+  maintainers:
+  - james.f
+public-info:
+  reach: internal-tool
+  tech-implementation: false
+  release-date: 2019-10-11
+  tags:
+  - sesame
+  departments:
+  - Tech
+  platforms:
+  - file-processing
+  - sesame
+tech-info:
+  trackable: false
+deployments:
+- type: command-line

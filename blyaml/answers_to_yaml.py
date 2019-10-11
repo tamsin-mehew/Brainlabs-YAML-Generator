@@ -101,4 +101,9 @@ def set_normal_value(deployments_dict: dict, key_parts: list, value: str) -> Non
 
 
 def yaml_str(value: str):
-    return bool(value) if value in ("true", "false") else value
+    if value == "true":
+        return True
+    elif value == "false":
+        return False
+    else:
+        return value

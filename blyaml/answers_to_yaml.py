@@ -11,7 +11,15 @@ def answers_to_yaml(answers: dict) -> str:
 
 
 def answers_to_structured_dict(answers: dict) -> dict:
-    output = defaultdict(dict)
+    def nested_dict() -> defaultdict:
+        return defaultdict(nested_dict)
+
+    def default_to_dict(d) -> dict:
+        if isinstance(d, defaultdict):
+            d = {k: default_to_dict(v) for k, v in d.items()}
+        return d
+
+    output = nested_dict()
 
     if answers["ignore"] == "true":
         output["meta"]["ignore"] = yaml_str(answers["ignore"])
@@ -53,7 +61,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
         output["tech-info"]["documentation"] = answers["documentation"]
     if answers.get("deployments"):
         output["deployments"] = deployments_list(answers)
-    return dict(output)
+    return default_to_dict(output)
 
 
 def structured_dict_to_yaml(structured_dict: dict) -> str:

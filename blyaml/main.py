@@ -54,7 +54,7 @@ def get_token() -> str:
         help="Reset the token",
     )
     args = parser.parse_args()
-
+    (Path.home() / DIRECTROY).mkdir(exist_ok=True)
     token_file = Path.home() / DIRECTROY / "token.txt"
     with open(token_file, "a+") as file:
         file.seek(0)

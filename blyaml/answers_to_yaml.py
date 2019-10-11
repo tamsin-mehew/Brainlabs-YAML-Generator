@@ -3,8 +3,6 @@ from typing import List
 
 import yaml
 
-from blyaml.lists import name_id_seperator
-
 
 def answers_to_yaml(answers: dict) -> str:
     structured_dict = answers_to_structured_dict(answers)
@@ -29,14 +27,10 @@ def answers_to_structured_dict(answers: dict) -> dict:
         output["public-info"]["tech-implementation"] = yaml_str(
             answers["tech-implementation"]
         )
-
-    if answers.get("client-names", "None found.") != "None found.":
-        client_ids = [
-            int(name_id.split(name_id_seperator)[1].strip())
-            for name_id in answers["client-names"]
-        ]
+    if answers.get("client-ids_list"):
+        client_ids = list(map(int, answers["client-ids_list"]))
         output["public-info"]["client-ids"] = client_ids
-    if answers.get("client-ids"):
+    if answers.get("client-ids_str"):
         client_ids = list(map(int, comma_sep(answers["client-ids"])))
         output["public-info"]["client-ids"] = client_ids
     if answers.get("release-date"):

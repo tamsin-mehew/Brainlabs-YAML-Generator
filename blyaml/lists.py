@@ -4,7 +4,6 @@ from pathlib import Path
 
 
 DIRECTROY = ".blyaml"
-name_id_seperator = "➖   "
 
 
 def values(name: str, token: str) -> list:
@@ -59,11 +58,14 @@ def client(token: str) -> list:
         response = requests.get(sesame_api_url, headers=headers)
         assert response.status_code == 200
 
-        clients = [client_name_format(client) for client in response.json()]
-        return sorted(clients)
+        clients = [client_name_format(i) for i in response.json()]
+        return sorted(clients, key=lambda d: d["name"])
     except Exception:
         raise requests.RequestException
 
 
-def client_name_format(client: dict) -> str:
-    return client["name"].ljust(50) + name_id_seperator + client["id"]
+def client_name_format(client_name_id: dict) -> dict:
+    return {
+        "name": client_name_id["name"].ljust(50) + client_name_id["id"],
+        "value": client_name_id["id"],
+    }

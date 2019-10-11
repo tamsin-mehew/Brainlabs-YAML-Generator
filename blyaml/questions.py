@@ -72,21 +72,20 @@ def standard_questions(token: str) -> list:
         },
         {
             "type": "checkbox",
-            "name": "client-names",
+            "name": "client-ids_list",
             "message": "What are the client ids?",
-            "choices": list_to_list_of_checkbox_dicts(values("client", token)),
+            "choices": values("client", token),
             "validate": validators.ValidClientIds,
             "when": lambda answers: answers["reach"] == "client-specific-tool"
             and answers["client-ids_choice"] == "From a list",
         },
         {
             "type": "input",
-            "name": "client-ids",
+            "name": "client-ids_str",
             "message": "What are the client ids? (Comma separated) (To find clients' IDs, visit sesame.brainlabsdigital.com/yaml-validation)",
             "validate": validators.ValidClientIds,
             "when": lambda answers: answers["reach"] == "client-specific-tool"
-            and answers["client-ids_choice"] == "Type them in"
-            and answers.get("client-names", "None found.") != "None found.",
+            and answers["client-ids_choice"] == "Type them in",
         },
         {
             "type": "input",

@@ -24,7 +24,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
 
     if answers["ignore"] == "true":
         output["meta"]["ignore"] = yaml_str(answers["ignore"])
-        return dict(output)
+        return default_to_dict(output)
 
     output["name"] = answers["name"]
     output["status"] = answers["status"]

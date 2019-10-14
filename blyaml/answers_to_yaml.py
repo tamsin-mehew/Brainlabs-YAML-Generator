@@ -1,6 +1,5 @@
-from collections import defaultdict
 from datetime import date
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Any, Hashable
 
 import yaml
 
@@ -12,25 +11,23 @@ def answers_to_yaml(answers: dict) -> str:
 
 
 def answers_to_structured_dict(answers: dict) -> dict:
-    def nested_dict() -> defaultdict:
-        return defaultdict(nested_dict)
+    class Tree(dict):
+        def __missing__(self, key: Hashable) -> Any:
+            value = self[key] = type(self)()
+            return value
 
-    def default_to_dict(d: Union[defaultdict, dict]) -> dict:
-        if isinstance(d, defaultdict):
-            d = {k: default_to_dict(v) for k, v in d.items()}
-        return d
-
-    output = nested_dict()
+    output = Tree()
 
     if answers["ignore"] == "true":
         output["meta"]["ignore"] = yaml_str(answers["ignore"])
-        return default_to_dict(output)
+        return output
 
     output["name"] = answers["name"]
     output["status"] = answers["status"]
     output["meta"]["ignore"] = yaml_str(answers["ignore"])
     output["ownership"]["owner"] = answers["owner"]
     output["ownership"]["maintainers"] = comma_sep(answers["maintainers"])
+
     output["public-info"]["reach"] = answers["reach"]
     if answers["tech-implementation"] != "null":
         output["public-info"]["tech-implementation"] = yaml_str(
@@ -43,7 +40,9 @@ def answers_to_structured_dict(answers: dict) -> dict:
         client_ids = list(map(int, comma_sep(answers["client-ids"])))
         output["public-info"]["client-ids"] = client_ids
     if answers.get("release-date"):
-        release_date = date.fromisoformat(answers["release-date"])
+        release_date = date.fromisoformat(
+            answers["release-date"]
+        )  # Convert to date object to avoid quotes in yaml
         output["public-info"]["release-date"] = release_date
     if answers.get("tags"):
         output["public-info"]["tags"] = answers["tags"]
@@ -59,17 +58,19 @@ def answers_to_structured_dict(answers: dict) -> dict:
         )
     if answers.get("docs"):
         output["public-info"]["documentation"]["docs"] = comma_sep(answers["docs"])
+
     if answers.get("trackable"):
         output["tech-info"]["trackable"] = yaml_str(answers["trackable"])
     if answers.get("documentation"):
         output["tech-info"]["documentation"] = comma_sep(answers["documentation"])
+
     if answers.get("deployments"):
         output["deployments"] = deployments_list(answers)
-    return default_to_dict(output)
+    return output
 
 
 def structured_dict_to_yaml(structured_dict: dict) -> str:
-    return yaml.dump(structured_dict, sort_keys=False)
+    return yaml.dump(data=structured_dict, sort_keys=False)
 
 
 def comma_sep(input: str) -> list:

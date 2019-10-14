@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List, Union, Dict, Any, Hashable
+from typing import Any, Dict, Hashable, List, Union
 
 import yaml
 

@@ -1,9 +1,9 @@
-import requests
 import shelve
 from pathlib import Path
 
+import requests
 
-from blyaml.main import DIRECTORY
+DIRECTORY = ".blyaml"
 
 
 def values(name: str, token: str) -> list:

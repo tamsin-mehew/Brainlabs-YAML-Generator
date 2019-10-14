@@ -1,15 +1,14 @@
-from argparse import ArgumentParser
-import subprocess
 import platform
+import subprocess
+from argparse import ArgumentParser
 from pathlib import Path
 
 import requests
 from PyInquirer import prompt
 
 from blyaml.answers_to_yaml import answers_to_yaml
-from blyaml.questions import meta_questions, standard_questions, output_questions
-
-DIRECTORY = ".blyaml"
+from blyaml.lists import DIRECTORY
+from blyaml.questions import meta_questions, output_questions, standard_questions
 
 
 def main() -> None:

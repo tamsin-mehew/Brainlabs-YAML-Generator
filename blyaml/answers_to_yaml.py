@@ -1,6 +1,6 @@
 from collections import defaultdict
 from datetime import date
-from typing import List
+from typing import List, Union, Dict
 
 import yaml
 
@@ -15,7 +15,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
     def nested_dict() -> defaultdict:
         return defaultdict(nested_dict)
 
-    def default_to_dict(d) -> dict:
+    def default_to_dict(d: Union[defaultdict, dict]) -> dict:
         if isinstance(d, defaultdict):
             d = {k: default_to_dict(v) for k, v in d.items()}
         return d
@@ -75,7 +75,7 @@ def comma_sep(input: str) -> list:
 
 
 def deployments_list(answers: dict) -> list:
-    deployments_dict = {x: {} for x in answers["deployments"]}
+    deployments_dict: Dict[str, dict] = {x: {} for x in answers["deployments"]}
     for key, value in answers.items():
         if "deployments." in key:
             key_parts = key.split(".")
@@ -100,7 +100,7 @@ def set_normal_value(deployments_dict: dict, key_parts: list, value: str) -> Non
     deployments_dict[key_parts[1]][key_parts[2]] = value
 
 
-def yaml_str(value: str):
+def yaml_str(value: str) -> Union[bool, str]:
     if value == "true":
         return True
     elif value == "false":

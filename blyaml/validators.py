@@ -2,9 +2,10 @@ import re
 from datetime import datetime
 
 from PyInquirer import Validator, ValidationError
+from prompt_toolkit.document import Document
 
 
-def non_empty(document) -> None:
+def non_empty(document: Document) -> None:
     if not document.text:
         raise ValidationError(
             message="Please enter a non-empty value.",
@@ -12,7 +13,7 @@ def non_empty(document) -> None:
         )
 
 
-def valid_date(document) -> None:
+def valid_date(document: Document) -> None:
     try:
         datetime.strptime(document.text, "%Y-%m-%d")
     except ValueError:
@@ -25,7 +26,7 @@ def valid_date(document) -> None:
 email_regex = r"^(\w|\d|\.|\_|\-)+$"
 
 
-def valid_email_prefix(document) -> None:
+def valid_email_prefix(document: Document) -> None:
     try:
         assert re.match(email_regex, document.text)
     except AssertionError:
@@ -35,7 +36,7 @@ def valid_email_prefix(document) -> None:
         )
 
 
-def valid_email_prefix_list(document) -> None:
+def valid_email_prefix_list(document: Document) -> None:
     try:
         for prefix in document.text.split(","):
             assert re.match(email_regex, prefix.strip())
@@ -46,7 +47,7 @@ def valid_email_prefix_list(document) -> None:
         )
 
 
-def valid_cron(document) -> None:
+def valid_cron(document: Document) -> None:
     cron_regex = r"^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$"
     try:
         if document.text.strip() != "null":
@@ -59,70 +60,70 @@ def valid_cron(document) -> None:
 
 
 class ValidNonEmpty(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a non-empty value."""
         non_empty(document)
 
 
 class ValidEmailPrefix(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a valid email prefix."""
         non_empty(document)
         valid_email_prefix(document)
 
 
 class ValidEmailPrefixList(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         non_empty(document)
         valid_email_prefix_list(document)
 
 
 class ValidClientIds(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid client id list."""
         # Checkboxes don't support validation yet: https://github.com/CITGuru/PyInquirer/issues/46
         pass
 
 
 class ValidDate(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a valid yyyy-mm-dd date."""
         non_empty(document)
         valid_date(document)
 
 
 class ValidOptionalUrl(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid url."""
         non_empty(document)
 
 
 class ValidUrl(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid url."""
         pass
 
 
 class ValidUrlList(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid url list."""
         non_empty(document)
 
 
 class ValidOptionalUrlList(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid url list."""
         pass
 
 
 class ValidCron(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid crontab style string."""
         non_empty(document)
         valid_cron(document)
 
 
 class ValidDirectory(Validator):
-    def validate(self, document) -> None:
+    def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid unix path."""
         non_empty(document)

@@ -268,6 +268,13 @@ def standard_questions(token: str) -> list:
             "when": partial(is_deployment, "tech-managed-apps-script"),
         },
         {
+            "type": "input",
+            "name": "deployments.user-managed-apps-script.template-url",
+            "message": "What is the user-managed-apps-script template url?",
+            "when": partial(is_deployment, "user-managed-apps-script"),
+            "validate": validators.ValidUrl,
+        },
+        {
             "type": "list",
             "name": "deployments.command-line.server",
             "message": "What is the command-line server? (Optional)",

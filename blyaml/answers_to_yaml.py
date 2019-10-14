@@ -50,17 +50,19 @@ def answers_to_structured_dict(answers: dict) -> dict:
     output["public-info"]["departments"] = answers["departments"]
     output["public-info"]["platforms"] = answers["platforms"]
     if answers.get("wiki"):
-        output["public-info"]["documentation"]["wiki"] = answers["wiki"]
+        output["public-info"]["documentation"]["wiki"] = comma_sep(answers["wiki"])
     if answers.get("cards"):
-        output["public-info"]["documentation"]["cards"] = answers["cards"]
+        output["public-info"]["documentation"]["cards"] = comma_sep(answers["cards"])
     if answers.get("spreadsheets"):
-        output["public-info"]["documentation"]["spreadsheets"] = answers["spreadsheets"]
+        output["public-info"]["documentation"]["spreadsheets"] = comma_sep(
+            answers["spreadsheets"]
+        )
     if answers.get("docs"):
-        output["public-info"]["documentation"]["docs"] = answers["docs"]
+        output["public-info"]["documentation"]["docs"] = comma_sep(answers["docs"])
     if answers.get("trackable"):
         output["tech-info"]["trackable"] = yaml_str(answers["trackable"])
     if answers.get("documentation"):
-        output["tech-info"]["documentation"] = answers["documentation"]
+        output["tech-info"]["documentation"] = comma_sep(answers["documentation"])
     if answers.get("deployments"):
         output["deployments"] = deployments_list(answers)
     return default_to_dict(output)

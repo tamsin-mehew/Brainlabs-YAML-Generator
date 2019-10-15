@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="blyaml",
     packages=["blyaml"],
-    version="21",
+    version="22",
     description="Tool for generating brainlabs.yaml files.",
     author="James Freeman",
     author_email="james.f@brainlabsdigital.com",

@@ -1,7 +1,9 @@
 from datetime import date
-from typing import Any, Dict, Hashable, List, Union
+from typing import Dict, List, Union
 
 import yaml
+
+from blyaml.tree import Tree
 
 
 def answers_to_yaml(answers: dict) -> str:
@@ -108,18 +110,3 @@ def yaml_str(value: str) -> Union[bool, str]:
         return False
     else:
         return value
-
-
-class Tree(dict):
-    """Creates keys as needed in a nested Tree structure."""
-
-    def __missing__(self, key: Hashable) -> Any:
-        value = self[key] = type(self)()
-        return value
-
-    def as_dict(self) -> dict:
-        """Converts all levels of the tree to standard Python dictionaries."""
-        return {
-            key: value.as_dict() if isinstance(value, self.__class__) else value
-            for key, value in self.items()
-        }

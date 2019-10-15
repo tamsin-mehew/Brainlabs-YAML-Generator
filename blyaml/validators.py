@@ -4,6 +4,8 @@ from datetime import datetime
 from PyInquirer import Validator, ValidationError
 from prompt_toolkit.document import Document
 
+# This file contains functions used for validation and Validator classes that use them.
+
 
 def non_empty(document: Document) -> None:
     if not document.text:
@@ -82,7 +84,8 @@ class ValidEmailPrefixList(Validator):
 class ValidClientIds(Validator):
     def validate(self, document: Document) -> None:
         """Throws no errors for a syntaxtically valid client id list."""
-        # Checkboxes don't support validation yet: https://github.com/CITGuru/PyInquirer/issues/46
+        # Checkboxes don't support validation yet.
+        # https://github.com/CITGuru/PyInquirer/issues/46
         pass
 
 

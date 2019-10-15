@@ -65,10 +65,6 @@ def answers_to_structured_dict(answers: dict) -> dict:
     return output.as_dict()
 
 
-def structured_dict_to_yaml(structured_dict: dict) -> str:
-    return yaml.dump(data=structured_dict, sort_keys=False)
-
-
 def comma_sep(input: str) -> list:
     """Convert a comma seperated string into a list."""
     return [i.strip() for i in input.split(",")]
@@ -100,6 +96,10 @@ def set_run_value(deployments_dict: dict, key_parts: list, value: str) -> None:
 
 def set_normal_value(deployments_dict: dict, key_parts: list, value: str) -> None:
     deployments_dict[key_parts[1]][key_parts[2]] = value
+
+
+def structured_dict_to_yaml(structured_dict: dict) -> str:
+    return yaml.dump(data=structured_dict, sort_keys=False)
 
 
 def yaml_str(value: str) -> Union[bool, str]:

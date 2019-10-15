@@ -1,13 +1,12 @@
 import platform
 import subprocess
 from argparse import ArgumentParser
-from pathlib import Path
 
 import requests
 from PyInquirer import prompt
 
 from blyaml.answers_to_yaml import answers_to_yaml
-from blyaml.lists import DIRECTORY
+from blyaml.directory import blyaml_directory
 from blyaml.questions import meta_questions, output_questions, standard_questions
 
 
@@ -53,8 +52,7 @@ def get_token() -> str:
         help="Reset the token",
     )
     args = parser.parse_args()
-    (Path.home() / DIRECTORY).mkdir(exist_ok=True)
-    token_file = Path.home() / DIRECTORY / "token.txt"
+    token_file = blyaml_directory() / "token.txt"
     with open(token_file, "a+") as file:
         file.seek(0)
         token = file.read()

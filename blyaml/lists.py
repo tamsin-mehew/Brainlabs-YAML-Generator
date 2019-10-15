@@ -1,14 +1,12 @@
 import shelve
-from pathlib import Path
 
 import requests
 
-DIRECTORY = ".blyaml"
+from blyaml.directory import blyaml_directory
 
 
 def values(name: str, token: str) -> list:
-    (Path.home() / DIRECTORY).mkdir(exist_ok=True)
-    shelf_pathname = str(Path.home() / DIRECTORY / "lists")
+    shelf_pathname = str(blyaml_directory() / "lists")
     try:
         if name == "client":
             values_list = client(token)

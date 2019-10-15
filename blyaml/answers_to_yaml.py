@@ -11,16 +11,11 @@ def answers_to_yaml(answers: dict) -> str:
 
 
 def answers_to_structured_dict(answers: dict) -> dict:
-    class Tree(dict):
-        def __missing__(self, key: Hashable) -> Any:
-            value = self[key] = type(self)()
-            return value
-
     output = Tree()
 
     if answers["ignore"] == "true":
         output["meta"]["ignore"] = yaml_str(answers["ignore"])
-        return output
+        return output.as_dict()
 
     output["name"] = answers["name"]
     output["status"] = answers["status"]
@@ -66,7 +61,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
 
     if answers.get("deployments"):
         output["deployments"] = deployments_list(answers)
-    return output
+    return output.as_dict()
 
 
 def structured_dict_to_yaml(structured_dict: dict) -> str:
@@ -110,3 +105,15 @@ def yaml_str(value: str) -> Union[bool, str]:
         return False
     else:
         return value
+
+
+class Tree(dict):
+    def __missing__(self, key: Hashable) -> Any:
+        value = self[key] = type(self)()
+        return value
+
+    def as_dict(self) -> dict:
+        return {
+            key: value.as_dict() if isinstance(value, self.__class__) else value
+            for key, value in self.items()
+        }

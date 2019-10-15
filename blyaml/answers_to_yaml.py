@@ -35,9 +35,8 @@ def answers_to_structured_dict(answers: dict) -> dict:
         client_ids = list(map(int, comma_sep(answers["client-ids"])))
         output["public-info"]["client-ids"] = client_ids
     if answers.get("release-date"):
-        release_date = date.fromisoformat(
-            answers["release-date"]
-        )  # Convert to date object to avoid quotes in yaml
+        # Convert to date object to avoid quotes in yaml
+        release_date = date.fromisoformat(answers["release-date"])
         output["public-info"]["release-date"] = release_date
     if answers.get("tags"):
         output["public-info"]["tags"] = answers["tags"]
@@ -69,10 +68,12 @@ def structured_dict_to_yaml(structured_dict: dict) -> str:
 
 
 def comma_sep(input: str) -> list:
+    """Convert a comma seperated string into a list."""
     return [i.strip() for i in input.split(",")]
 
 
 def deployments_list(answers: dict) -> list:
+    """Find all deployment answers and creates and returns a deployments list."""
     deployments_dict: Dict[str, dict] = {x: {} for x in answers["deployments"]}
     for key, value in answers.items():
         if "deployments." in key:
@@ -91,6 +92,7 @@ def deployments_list(answers: dict) -> list:
 
 
 def set_run_value(deployments_dict: dict, key_parts: list, value: str) -> None:
+    """Create 'runs' list of dicts if it does not exist."""
     deployments_dict[key_parts[1]].setdefault("runs", [{}])[0][key_parts[2]] = value
 
 
@@ -99,6 +101,7 @@ def set_normal_value(deployments_dict: dict, key_parts: list, value: str) -> Non
 
 
 def yaml_str(value: str) -> Union[bool, str]:
+    """Convert true and false into bool, so that they do not get quoted in yaml."""
     if value == "true":
         return True
     elif value == "false":
@@ -108,11 +111,14 @@ def yaml_str(value: str) -> Union[bool, str]:
 
 
 class Tree(dict):
+    """Creates keys as needed in a nested Tree structure."""
+
     def __missing__(self, key: Hashable) -> Any:
         value = self[key] = type(self)()
         return value
 
     def as_dict(self) -> dict:
+        """Converts all levels of the tree to standard Python dictionaries."""
         return {
             key: value.as_dict() if isinstance(value, self.__class__) else value
             for key, value in self.items()

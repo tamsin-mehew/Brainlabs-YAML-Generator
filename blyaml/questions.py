@@ -153,7 +153,7 @@ def standard_questions(token: str) -> list:
             "name": "deployments",
             "message": "How is it deployed?",
             "choices": list_to_list_of_checkbox_dicts(values("deployment", token)),
-            "when": is_library,
+            "when": not_library,
         },
         {
             "type": "input",
@@ -312,12 +312,13 @@ def standard_questions(token: str) -> list:
     ]
 
 
-def is_library(answers: dict) -> bool:
+def not_library(answers: dict) -> bool:
     return answers["reach"] != "library"
 
 
 def is_deployment(deployment: str, answers: dict) -> bool:
-    return is_library(answers) and (deployment in answers["deployments"])
+    """Check that current answer set is not a library and containts a deployment."""
+    return not_library(answers) and (deployment in answers["deployments"])
 
 
 def output_questions() -> list:

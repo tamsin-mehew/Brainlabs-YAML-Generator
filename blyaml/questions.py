@@ -186,7 +186,7 @@ def standard_questions(token: str) -> list:
         {
             "type": "input",
             "name": "deployments.user-managed-google-ads-script.eval-file-urls",
-            "message": "What is the user-managed-google-ads-script url? (Comma separated, Optional)",
+            "message": "What are the user-managed-google-ads-script urls? (Comma separated, Optional)",
             "when": partial(is_deployment, "user-managed-google-ads-script"),
             "validate": validators.ValidOptionalUrlList,
         },

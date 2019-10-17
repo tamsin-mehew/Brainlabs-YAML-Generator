@@ -5,6 +5,7 @@ from PyInquirer import Validator, ValidationError
 from prompt_toolkit.document import Document
 
 # This file contains functions used for validation and Validator classes that use them.
+# Validators are used by questions.
 
 
 def non_empty(document: Document) -> bool:
@@ -48,7 +49,34 @@ def valid_email_prefix_list(document: Document) -> bool:
         return True
     except AssertionError:
         raise ValidationError(
-            message="Please enter a valid email prefix (e.g. james.f).",
+            message="Please enter a comma seperated list of valid email prefixes (e.g. james.f).",
+            cursor_position=len(document.text),
+        )
+
+
+url_regex = (
+    r"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+)
+
+
+def valid_url(document: Document) -> bool:
+    try:
+        assert re.match(url_regex, document.text.strip())
+        return True
+    except AssertionError:
+        raise ValidationError(
+            message="Please enter a valid url.", cursor_position=len(document.text)
+        )
+
+
+def valid_url_list(document: Document) -> bool:
+    try:
+        for url in document.text.split(","):
+            assert re.match(url_regex, url.strip())
+        return True
+    except AssertionError:
+        raise ValidationError(
+            message="Please enter a comma seperated list of valid urls.",
             cursor_position=len(document.text),
         )
 
@@ -63,6 +91,18 @@ def valid_cron(document: Document) -> bool:
     except AssertionError:
         raise ValidationError(
             message="Please enter a valid cron or null.",
+            cursor_position=len(document.text),
+        )
+
+
+def valid_directory(document: Document) -> bool:
+    directory_regex = r"^(/)?([^/\0]+(/)?)+$"
+    try:
+        assert re.match(directory_regex, document.text.strip())
+        return True
+    except AssertionError:
+        raise ValidationError(
+            message="Please enter a valid unix directory.",
             cursor_position=len(document.text),
         )
 
@@ -101,25 +141,25 @@ class ValidDate(Validator):
 class ValidOptionalUrl(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid url."""
-        return non_empty(document)
+        return not non_empty(document) or valid_url(document)
 
 
 class ValidUrl(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid url."""
-        return True
+        return non_empty(document) and valid_url(document)
 
 
 class ValidUrlList(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid url list."""
-        return non_empty(document)
+        return non_empty(document) and valid_url_list(document)
 
 
 class ValidOptionalUrlList(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid url list."""
-        return True
+        return not non_empty(document) or valid_url_list(document)
 
 
 class ValidCron(Validator):
@@ -131,4 +171,4 @@ class ValidCron(Validator):
 class ValidDirectory(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid unix path."""
-        return non_empty(document)
+        return non_empty(document) and valid_directory(document)

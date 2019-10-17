@@ -60,8 +60,13 @@ rm -rf ~/.blyaml
 # Technical File Structure
 
 The project primarily exists in the [blyaml](blyaml) folder.
+
 The [main file](blyaml/main.py) runs the CLI using [PyInquirer](https://github.com/CITGuru/PyInquirer).
+
 [questions.py](blyaml/questions.py) contains functions that return lists of dictionaries of PyInquirer structured questions.
+
 [validators.py](blyaml/validators.py) contains Validator classes that are used by the questions, and validation functions used by the validators.
+
 [lists.py](blyaml/lists.py) contains functions that return lists of choices to be used in the questions. Most of these lists come from the Sesame API and are cached locally using shelve.
+
 [answers_to_yaml.py](blyaml/answers_to_yaml.py) contains functions that process the PyInquirer answers dict into a `brainlabs.yaml` format YAML str.

@@ -55,7 +55,7 @@ def answers_to_structured_dict(answers: dict) -> dict:
     if answers.get("docs"):
         output["public-info"]["documentation"]["docs"] = comma_sep(answers["docs"])
 
-    if answers.get("trackable"):
+    if answers["trackable"] != "null":
         output["tech-info"]["trackable"] = yaml_str(answers["trackable"])
     if answers.get("documentation"):
         output["tech-info"]["documentation"] = comma_sep(answers["documentation"])

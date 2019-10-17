@@ -141,7 +141,7 @@ class ValidDate(Validator):
 class ValidOptionalUrl(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid url."""
-        return not non_empty(document) or valid_url(document)
+        return document.text == "" or valid_url(document)
 
 
 class ValidUrl(Validator):
@@ -159,7 +159,7 @@ class ValidUrlList(Validator):
 class ValidOptionalUrlList(Validator):
     def validate(self, document: Document) -> bool:
         """Return True with no errors for a syntaxtically valid url list."""
-        return not non_empty(document) or valid_url_list(document)
+        return document.text == "" or valid_url_list(document)
 
 
 class ValidCron(Validator):
